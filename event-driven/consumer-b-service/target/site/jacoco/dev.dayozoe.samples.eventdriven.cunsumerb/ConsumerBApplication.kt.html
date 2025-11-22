@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConsumerBApplication.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">consumer-b-service</a> &gt; <a href="index.source.html" class="el_package">dev.dayozoe.samples.eventdriven.cunsumerb</a> &gt; <span class="el_source">ConsumerBApplication.kt</span></div><h1>ConsumerBApplication.kt</h1><pre class="source lang-java linenums">package dev.dayozoe.samples.eventdriven.cunsumerb
+
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+import org.springframework.context.annotation.Bean
+import dev.dayozoe.samples.eventdriven.cunsumerb.message.CallmeEvent
+import dev.dayozoe.samples.eventdriven.cunsumerb.message.CallmeResponse
+import java.util.function.Consumer
+import java.util.function.Function
+
+<span class="fc" id="L13">@SpringBootApplication</span>
+class ConsumerBApplication {
+
+<span class="fc" id="L16">    val logger: Logger = LoggerFactory.getLogger(ConsumerBApplication::class.java)</span>
+
+//    @Bean
+//    fun callmeEventConsumer(): Consumer&lt;CallmeEvent&gt; = Consumer { logger.info(&quot;Received: {}&quot;, it) }
+
+    @Bean
+<span class="pc" id="L22">    fun fireForget(): Consumer&lt;CallmeEvent&gt; = Consumer { logger.info(&quot;Received(fireForget): {}&quot;, it) }</span>
+
+//    @Bean
+//    fun process(): Consumer&lt;CallmeEvent&gt; = Consumer { logger.info(&quot;Received(process): {}&quot;, it) }
+
+    @Bean
+<span class="fc" id="L28">    fun process(): Function&lt;CallmeEvent, CallmeResponse&gt; = Function { logAndResponse(it) }</span>
+
+    private fun logAndResponse(callmeEvent: CallmeEvent): CallmeResponse {
+<span class="fc" id="L31">        logger.info(&quot;Received(process): {}&quot;, callmeEvent)</span>
+<span class="fc" id="L32">        return CallmeResponse(callmeEvent.id, &quot;I'm callme response&quot;)</span>
+    }
+}
+
+fun main(args: Array&lt;String&gt;) {
+<span class="nc" id="L37">    runApplication&lt;ConsumerBApplication&gt;(*args)</span>
+<span class="nc" id="L38">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

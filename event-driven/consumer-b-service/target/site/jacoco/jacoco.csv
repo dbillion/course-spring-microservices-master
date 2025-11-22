@@ -1,0 +1,5 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+consumer-b-service,dev.dayozoe.samples.eventdriven.cunsumerb.message,CallmeResponse,0,30,0,0,0,1,0,4,0,4
+consumer-b-service,dev.dayozoe.samples.eventdriven.cunsumerb.message,CallmeEvent,18,12,0,0,0,1,2,2,2,2
+consumer-b-service,dev.dayozoe.samples.eventdriven.cunsumerb,ConsumerBApplication,6,35,0,0,0,6,1,6,1,6
+consumer-b-service,dev.dayozoe.samples.eventdriven.cunsumerb,ConsumerBApplicationKt,10,0,0,0,2,0,1,0,1,0

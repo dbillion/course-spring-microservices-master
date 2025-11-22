@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: callme-service
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        serviceId: config-server
+      failFast: true
+      uri: http://localhost:8080
+    consul:
+      config:
+        format: YAML
+      discovery:
+        registerHealthCheck: false
+        instanceId: "${spring.cloud.client.hostname}:${spring.application.name}:${random.value}"
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 3
+    preferIpAddress: true
+    instanceId: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${random.value}}

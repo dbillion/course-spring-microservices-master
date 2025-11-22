@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: dev.dayozoe.samples.eventdriven.consumerb.RouterFunctionTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 37.71 s -- in dev.dayozoe.samples.eventdriven.consumerb.RouterFunctionTest

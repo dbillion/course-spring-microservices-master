@@ -1,0 +1,8 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+inter-callme-service,dev.dayozoe.samples.callme.controller,CallmeController,59,70,2,0,11,11,5,3,4,3
+inter-callme-service,dev.dayozoe.samples.callme,InterCallmeServiceApplicationKt,10,0,0,0,2,0,1,0,1,0
+inter-callme-service,dev.dayozoe.samples.callme,CallmeServiceApplication,0,3,0,0,0,1,0,1,0,1
+inter-callme-service,dev.dayozoe.samples.callme.model,CallmeRequest,0,30,0,0,0,1,0,4,0,4
+inter-callme-service,dev.dayozoe.samples.callme.model,CallmeResponse,4,15,0,0,0,1,1,3,1,3
+inter-callme-service,dev.dayozoe.samples.callme.model,Conversation,6,29,0,0,0,3,2,3,2,3
+inter-callme-service,dev.dayozoe.samples.callme.repository,ConversationRepository,4,52,1,5,1,4,2,6,1,4

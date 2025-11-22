@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: caller-service
+  cloud:
+    config:
+      uri: http://localhost:8080
+#       token: spring-microservices-course #Enable for Vault test
+    consul:
+      config:
+        format: YAML
+      discovery:
+        registerHealthCheck: false
+        instanceId: "${spring.cloud.client.hostname}:${spring.application.name}:${random.value}"
+
+eureka:
+  instance:
+    instanceId: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${random.value}}}

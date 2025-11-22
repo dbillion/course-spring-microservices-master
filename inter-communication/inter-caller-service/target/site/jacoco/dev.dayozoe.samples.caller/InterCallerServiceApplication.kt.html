@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InterCallerServiceApplication.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inter-caller-service</a> &gt; <a href="index.source.html" class="el_package">dev.dayozoe.samples.caller</a> &gt; <span class="el_source">InterCallerServiceApplication.kt</span></div><h1>InterCallerServiceApplication.kt</h1><pre class="source lang-java linenums">package dev.dayozoe.samples.caller
+
+import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig
+import io.github.resilience4j.timelimiter.TimeLimiterConfig
+import io.netty.channel.ChannelOption
+import io.netty.handler.timeout.ReadTimeoutHandler
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder
+import org.springframework.cloud.client.circuitbreaker.Customizer
+import org.springframework.cloud.client.loadbalancer.LoadBalanced
+import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient
+import org.springframework.cloud.openfeign.EnableFeignClients
+import org.springframework.context.annotation.Bean
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
+import dev.dayozoe.samples.caller.client.CustomCallmeClientLoadBalancerConfiguration
+import reactor.netty.http.client.HttpClient
+import reactor.netty.tcp.TcpClient
+import java.time.Duration
+import java.util.concurrent.TimeUnit
+
+
+<span class="fc" id="L27">@SpringBootApplication</span>
+@EnableFeignClients
+@LoadBalancerClient(value = &quot;inter-callme-service&quot;, configuration = [CustomCallmeClientLoadBalancerConfiguration::class])
+class InterCallerServiceApplication {
+
+//    @Bean
+//    fun responseTimeHistory(): ResponseTimeHistory = ResponseTimeHistory()
+
+//    @Bean
+//    fun responseTimeInterceptor(): ResponseTimeInterceptor = ResponseTimeInterceptor(responseTimeHistory())
+
+    @Bean
+    @LoadBalanced
+<span class="fc" id="L40">    fun template(builder: RestTemplateBuilder): RestTemplate = builder</span>
+//            .interceptors(responseTimeInterceptor())
+//            .setReadTimeout(Duration.ofMillis(100))
+//            .setConnectTimeout(Duration.ofMillis(100))
+<span class="fc" id="L44">            .build()</span>
+
+    @Bean
+    @LoadBalanced
+    fun clientBuilder(): WebClient.Builder {
+<span class="fc" id="L49">        val tcpClient: TcpClient = TcpClient.create()</span>
+<span class="fc" id="L50">                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 100)</span>
+<span class="pc" id="L51">                .doOnConnected { conn -&gt;</span>
+<span class="nc" id="L52">                    conn.addHandlerLast(ReadTimeoutHandler(100, TimeUnit.MILLISECONDS))</span>
+<span class="nc" id="L53">                }</span>
+<span class="fc" id="L54">        val connector = ReactorClientHttpConnector(HttpClient.from(tcpClient))</span>
+<span class="fc" id="L55">        return WebClient.builder().clientConnector(connector)</span>
+    }
+
+    @Bean
+    fun defaultCustomizer(): Customizer&lt;Resilience4JCircuitBreakerFactory&gt; {
+<span class="fc" id="L60">        return Customizer { factory: Resilience4JCircuitBreakerFactory -&gt;</span>
+<span class="fc" id="L61">            factory.configureDefault { id: String? -&gt;</span>
+<span class="nc" id="L62">                Resilience4JConfigBuilder(id)</span>
+<span class="nc" id="L63">                        .timeLimiterConfig(TimeLimiterConfig.custom()</span>
+<span class="nc" id="L64">                                .timeoutDuration(Duration.ofMillis(500))</span>
+<span class="nc" id="L65">                                .build())</span>
+<span class="nc" id="L66">                        .circuitBreakerConfig(CircuitBreakerConfig.custom()</span>
+<span class="nc" id="L67">                                .slidingWindowSize(10)</span>
+<span class="nc" id="L68">                                .failureRateThreshold(66.6F)</span>
+<span class="nc" id="L69">                                .slowCallRateThreshold(66.6F)</span>
+<span class="nc" id="L70">                                .build())</span>
+<span class="nc" id="L71">                        .build()</span>
+            }
+<span class="fc" id="L73">        }</span>
+    }
+
+}
+
+fun main(args: Array&lt;String&gt;) {
+<span class="nc" id="L79">    runApplication&lt;InterCallerServiceApplication&gt;(*args)</span>
+<span class="nc" id="L80">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
