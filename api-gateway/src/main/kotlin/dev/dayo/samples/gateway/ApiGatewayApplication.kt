@@ -36,6 +36,7 @@ class ApiGatewayApplication {
                             .build()
                     )
                     .build()
+
             }
         }
     }
